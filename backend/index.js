@@ -27,11 +27,14 @@ io.on("connect",(socket)=>{
 	socket.on('join',({name,room},callBack)=>{
 		
 		const {user,error} = addUsers({id:socket.id,name:name,room:room})
-		console.log(addUsers({id:socket.id,name:name,room:room}))
+		console.log(user)
 	if(error){
 		callBack(error)
+		console.log("error",error)
 		return;
 	}
+	socket.join(user.room)
+	socket.emit("Message",{user:'admin',text:`${user.name} Joined`})
 	})
 	
 	

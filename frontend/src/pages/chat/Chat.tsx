@@ -15,6 +15,7 @@ const Chat = ()=>{
 		console.log( name,room )
 		socket = io(backEndUrl)
 		socket.emit('join',{name:name,room:room},(error:any)=>{
+			console.log("join",error)
 			if(error){
 				alert(error)
 			}
