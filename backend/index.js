@@ -2,7 +2,8 @@
 
 const express = require('express');
 const http = require('http');
-const socketio = require('socket.io')
+const socketio = require('socket.io');
+const { addUsers } = require('./entity');
 
 
 //Instance
@@ -23,6 +24,16 @@ app.get('/',(req,res)=>{
 
 io.on("connect",(socket)=>{
 	console.log("User Is Connected");
+	socket.on('join',({name,room},callBack)=>{
+		
+		const {user,error} = addUsers({id:socket.id,name:name,room:room})
+		console.log(addUsers({id:socket.id,name:name,room:room}))
+	if(error){
+		callBack(error)
+		return;
+	}
+	})
+	
 	
 	socket.on("disconnect",()=>{
 		console.log("User Disconnected");
