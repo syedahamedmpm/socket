@@ -3,7 +3,7 @@
 const express = require('express');
 const http = require('http');
 const socketio = require('socket.io');
-const { addUsers } = require('./entity');
+const { addUsers,removeUser, getUser } = require('./entity');
 
 
 //Instance
@@ -34,12 +34,30 @@ io.on("connect",(socket)=>{
 		return;
 	}
 	socket.join(user.room)
-	socket.emit("Message",{user:'admin',text:`${user.name} Joined`})
+	//Intha room la ulla ellarukkume Message Pogum
+	socket.emit("message",{user:'admin',text:`Welcome ${user.name}`})
+	////Intha room la ulla ellarukkume Message Pogum exclude newly joined user
+	socket.broadcast.to(user.room).emit("message",{user:'admin',text:`${user.name} Joined`})
 	})
 	
 	
 	socket.on("disconnect",()=>{
 		console.log("User Disconnected");
+		const user = removeUser(socket.id)
+		if(user){
+			io.to(user.room).emit("message",{user:'admin',text : `${user.name} has left`})
+		}
+	})
+	socket.on('sendMsg',(mes,callBack)=>{
+		console.log("sendMsg",mes);
+		const user  = getUser(socket.id)
+		console.log("useruseruseruser",user)
+		if(user){
+			io.to(user.room).emit("message",{user:user.name,text : mes})
+		}
+		else{
+			callBack('User Not Found')
+		}
 	})
 })
 

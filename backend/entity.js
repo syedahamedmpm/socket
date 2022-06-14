@@ -1,5 +1,5 @@
 let users = []
-
+console.log(users)
 const addUsers = ({id,name,room}) =>{
     console.log(id,name,room)
 if(!name | !room){
@@ -18,5 +18,17 @@ const user  ={id,name,room}
 users.push(user)
 return {user}
 }
-
-module.exports = {addUsers}
+const removeUser = (id) =>{
+    console.log(id)
+    const findIdx = users.findIndex(each=>each.id == id);
+    if(findIdx>=0){
+        return users.splice(findIdx,1)[0]
+    }
+}
+const getUser = (id) =>{
+    console.log("NEE",id)
+    return users.find(each=>each.id == id)
+    
+    
+}
+module.exports = {addUsers,removeUser,getUser}
